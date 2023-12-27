@@ -22,8 +22,7 @@ class LRU_Cache:
             self.cache_list += [key]                # Append the most recently used key to the cache list
         
         else:
-            # If the cache list is full, evict the least recently used item, update the dictionary and cache list with the new key-value pair.
-            self.delete(self.cache_list[0])         # Evict the least recently used item from the cache list and dictionary
+            # If the cache list is full, evict the least recently used item, update the dictionary and cache list with the new key-value pair.p                                                    # Evict the least recently used item from the cache list and dictionary
             self.update_cache_list(key)             # Update the cache list with the most recently used key
             self.dict[key] = value                  # Set or update the key-value pair in the dictionary
             self.cache_list += [key]                # Append the most recently used key to the cache list
@@ -34,15 +33,8 @@ class LRU_Cache:
             
         if len(self.cache_list) == 0:               #if list is empty then there is no key-value in the dictinary as well
             return -1
-        
-        elif len(self.cache_list) != self.capacity: # If the cache list is not full then we just add the most recently used item in the list
-            if key in self.dict:                    # If the key is in the dictionary, update the cache list and return the value associated with the key.
-                self.update_cache_list(key) 
-                self.cache_list += [key]
-                return self.dict[key]
-            else:                                   #If key is not found return -1
-                return -1
-        else:                                       # If the cache list is full then we need to pop the least recenlty used item from the cache and then add the most recently used item in the list
+                
+        else:                                       # If the cache list contains element 
             if key in self.dict:                    # If the key is in the dictionary, update the cache list and return the value associated with the key.
                 self.update_cache_list(key)
                 self.cache_list += [key]
@@ -64,14 +56,16 @@ class LRU_Cache:
                 i += 1
             self.cache_list.pop(i)
         elif len(self.cache_list) == self.capacity and key not in self.cache_list:
-            self.cache_list.pop(0)                 # If the cache list is full and the key is not in the cache list, remove the least recently used item.
+            self.cache_list.pop(0)
+            self.delete(key)
+            # If the cache list is full and the key is not in the cache list, remove the least recently used item.
             
     
     def __str__(self):
         cache = '{'
         for i in range(len(self.cache_list)):
             if i == len(self.cache_list)-1:
-                cache += f"{self.cache_list[i]} = {self.dict[self.cache_list[i]]}}}"
+                cache += f"{self.cache_list[i]} = {self.dict[self.cache_list[i]]}}"
             else:
                 cache += f"{self.cache_list[i]} = {self.dict[self.cache_list[i]]}, "
         return cache
