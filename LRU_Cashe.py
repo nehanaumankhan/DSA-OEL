@@ -35,14 +35,8 @@ class LRU_Cache:
         if len(self.cache_list) == 0:               #if list is empty then there is no key-value in the dictinary as well
             return -1
         
-        elif len(self.cache_list) != self.capacity: # If the cache list is not full then we just add the most recently used item in the list
-            if key in self.dict:                    # If the key is in the dictionary, update the cache list and return the value associated with the key.
-                self.update_cache_list(key) 
-                self.cache_list += [key]
-                return self.dict[key]
-            else:                                   #If key is not found return -1
-                return -1
-        else:                                       # If the cache list is full then we need to pop the least recenlty used item from the cache and then add the most recently used item in the list
+        
+        else : 
             if key in self.dict:                    # If the key is in the dictionary, update the cache list and return the value associated with the key.
                 self.update_cache_list(key)
                 self.cache_list += [key]
@@ -68,10 +62,12 @@ class LRU_Cache:
             
     
     def __str__(self):
-        cache = '{'
-        for i in range(len(self.cache_list)):
-            if i == len(self.cache_list)-1:
-                cache += f"{self.cache_list[i]} = {self.dict[self.cache_list[i]]}}}"
-            else:
-                cache += f"{self.cache_list[i]} = {self.dict[self.cache_list[i]]}, "
-        return cache
+    cache = '{'
+    for i in range(len(self.cache_list)):
+        key = self.cache_list[i]
+        value = self.dict.get(key, 'Key not found')
+        if i == len(self.cache_list) - 1:
+            cache += f"{key} = {value}}}"
+        else:
+            cache += f"{key} = {value}, "
+    return cache
