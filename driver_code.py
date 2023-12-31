@@ -1,5 +1,4 @@
 from LRU_Cache import LRU_Cache
-
 # Driver code to test LRU Cache class
 lru_cache1 = LRU_Cache(2)
 lru_cache1.put(1, 1)   # cache is {1=1}
@@ -40,12 +39,22 @@ print(lru_cache2)
 total_requests = 0           # Now retrieving all key-values from LRU Cache and computing the final miss rate
 cache_miss = 0
 cache_hit = 0
-for i in range(101):
+#Retrieving values from range (0-49)
+for i in range(50):
     total_requests += 1
     if lru_cache2.get(i) == -1:
         cache_miss += 1
     else:
         cache_hit += 1
+#Retreiving remaining prime numbers from (50-100)
+pn_50_100=[53, 59, 61, 67, 71, 73, 79, 83, 89, 97]        
+for i in pn_50_100:
+    total_requests += 1
+    if lru_cache2.get(i) == -1:
+        cache_miss += 1
+    else:
+        cache_hit += 1
+        
 
 miss_rate = cache_miss / total_requests
 print(f"\nCache hit: {cache_hit}\nCache missed: {cache_miss}\nFinal Miss Rate: {miss_rate * 100:.2f}%")
