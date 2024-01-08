@@ -7,7 +7,8 @@ class LRU_Cache:
         self.capacity = capacity    # Size of cache list cannot exceed the capacity
         self.cache_list = []        # Cache list keeps track of recently used key, the most recently used key is at -1 index and the least recently used key is at 0th index 
         self.dict = {}              # Keeps the key-value pairs of the items present in the cache list
-
+        self.cache_missed = 0
+        
     def put(self, key, value):
         '''put(self, key, value) function updates the value of the key if the key exists. Otherwise, adds the key-value pair
         to the cache. If the number of keys exceeds the capacity from this operation, evict the least recently used key. Each call
@@ -15,15 +16,14 @@ class LRU_Cache:
         if not (0 <= key <= 100 and 0 <= value <= 100):
             raise ValueError("📌The Key and value must be greater equal to 0 and less than equal to 100")
         
-        if len(self.cache_list) != self.capacity:
-            # If the cache list is not full, update the list without removing the least recently used item. The dictionary remains the same.  
+        if len(self.cache_list) != self.capacity:   # If the cache list is not full, update the list without removing the least recently used item. The dictionary remains the same.  
+            self.cache_missed += 1
             self.dict[key] = value                  # Set or update the key-value pair in the dictionary
             self.update_cache_list(key)             # Update the cache list with the most recently used key
             self.cache_list += [key]                # Append the most recently used key to the cache list
-        
-        else:
-            # If the cache list is full, evict the least recently used item, update the dictionary and cache list with the new key-value pair.
-            self.delete(self.cache_list[0])         # Evict the least recently used item from the cache list and dictionary
+        else:                                       # If the cache list is full, evict the least recently used item, update the dictionary and cache list with the new key-value pair. 
+            if key not in self.dict:
+                self.delete(self.cache_list[0])         # Evict the least recently used item from the cache list and dictionary
             self.update_cache_list(key)             # Update the cache list with the most recently used key
             self.dict[key] = value                  # Set or update the key-value pair in the dictionary
             self.cache_list += [key]                # Append the most recently used key to the cache list
@@ -35,13 +35,13 @@ class LRU_Cache:
         if len(self.cache_list) == 0:               #if list is empty then there is no key-value in the dictinary as well
             return -1
         
-        
-        else : 
+        else:                                       # If the cache list is full then we need to pop the least recenlty used item from the cache and then add the most recently used item in the list
             if key in self.dict:                    # If the key is in the dictionary, update the cache list and return the value associated with the key.
                 self.update_cache_list(key)
                 self.cache_list += [key]
                 return self.dict[key]
             else:
+                self.cache_missed += 1              #Cache miss occurs when the key that is passed in get is not present
                 return -1
             
     def delete(self, key):                          # Function to delete a key from the dictionary.
@@ -58,16 +58,16 @@ class LRU_Cache:
                 i += 1
             self.cache_list.pop(i)
         elif len(self.cache_list) == self.capacity and key not in self.cache_list:
-            self.cache_list.pop(0)                 # If the cache list is full and the key is not in the cache list, remove the least recently used item.
-            
+            self.cache_missed += 1                 # cache miss occurs when an item is poped from the cache list(we actually lost that item)
+            self.cache_list.pop(0)                 # If the cache list is full and the key is not in the cache list, remove the least recently used item.    
     
     def __str__(self):
-    cache = '{'
-    for i in range(len(self.cache_list)):
-        key = self.cache_list[i]
-        value = self.dict.get(key, 'Key not found')
-        if i == len(self.cache_list) - 1:
-            cache += f"{key} = {value}}}"
-        else:
-            cache += f"{key} = {value}, "
-    return cache
+        cache = '{'
+        for i in range(len(self.cache_list)):
+            key = self.cache_list[i]
+            value = self.dict.get(key, 'Key not found')
+            if i == len(self.cache_list) - 1:
+                cache += f"{key} = {value}}}"
+            else:
+                cache += f"{key} = {value}, "
+        return cache        
