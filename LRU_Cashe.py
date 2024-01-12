@@ -17,7 +17,8 @@ class LRU_Cache:
             raise ValueError("📌The Key and value must be greater equal to 0 and less than equal to 100")
         
         if len(self.cache_list) != self.capacity:   # If the cache list is not full, update the list without removing the least recently used item. The dictionary remains the same.  
-            self.cache_missed += 1
+            if key not in self.dict:                # If the key exists((means, its reference is present) in cache then cache missed will not be incremented.  
+                self.cache_missed += 1
             self.dict[key] = value                  # Set or update the key-value pair in the dictionary
             self.update_cache_list(key)             # Update the cache list with the most recently used key
             self.cache_list += [key]                # Append the most recently used key to the cache list
